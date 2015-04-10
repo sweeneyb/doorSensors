@@ -3,6 +3,7 @@ import time
 import os
 import httplib
 import RPi.GPIO as GPIO
+from pushbullet import PushBullet
 
 import keys
 
@@ -58,6 +59,10 @@ GPIO.setup(SPIMISO, GPIO.IN)
 GPIO.setup(SPICLK, GPIO.OUT)
 GPIO.setup(SPICS, GPIO.OUT)
 
+apiKey = keys.pushbullet_key
+p = PushBullet(apiKey)
+
+
 # 10k trim pot connected to adc #0
 potentiometer_adc = 0;
 
@@ -102,16 +107,7 @@ while True:
                 last_read = trim_pot
                 message = "rPi analog state changed to: %d" % (trim_pot)
                 print message
-                json = '{"registration_ids" : ["%s"],"data" :{"message" : "%s" }}' % (keys.registration_ids, message)
-                print json
-                conn = httplib.HTTPSConnection("android.googleapis.com")
-                headers = {'Content-type': 'application/json', 'Authorization' : 'key=' + keys.authorization } 
-                conn.request("POST", "/gcm/send", json,  headers)
-                response = conn.getresponse()
-                print response.status, response.reason
-                data = response.read()
-                print data
-
+                p.pushNote(keys.pushbullet_device, 'Hello world', 'Test body')
 
         # hang out and do nothing for a half second
         time.sleep(0.5)
