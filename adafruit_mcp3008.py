@@ -67,7 +67,7 @@ p = PushBullet(apiKey)
 potentiometer_adc = 0;
 
 last_read = 0       # this keeps track of the last potentiometer value
-tolerance = 25       # to keep from being jittery we'll only change
+tolerance = 100       # to keep from being jittery we'll only change
                     # volume when the pot has moved more than 5 'counts'
 
 while True:
@@ -107,7 +107,10 @@ while True:
                 last_read = trim_pot
                 message = "rPi analog state changed to: %d" % (trim_pot)
                 print message
-                p.pushNote(keys.pushbullet_device, 'Hello world', 'Test body')
+                if trim_pot < 100:
+                    p.pushNote(keys.pushbullet_device, 'Door opened.', 'Office');
+                else:
+                    p.pushNote(keys.pushbullet_device, 'Door closed', 'Office')
 
         # hang out and do nothing for a half second
         time.sleep(0.5)
