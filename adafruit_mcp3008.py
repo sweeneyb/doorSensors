@@ -64,25 +64,28 @@ p = PushBullet(apiKey)
 
 
 # 10k trim pot connected to adc #0
-potentiometer_adc = 0;
+#potentiometer_adc = 2;
+hw_map = [[0, "office door"],[2,"back hall door"]]
+last_read = [0, 0]
 
-last_read = 0       # this keeps track of the last potentiometer value
+#last_read = 0       # this keeps track of the last potentiometer value
 tolerance = 100       # to keep from being jittery we'll only change
                     # volume when the pot has moved more than 5 'counts'
 
 while True:
+   for i in range(len(last_read)):
         # we'll assume that the pot didn't move
         trim_pot_changed = False
 
         # read the analog pin
-        trim_pot = readadc(potentiometer_adc, SPICLK, SPIMOSI, SPIMISO, SPICS)
+        trim_pot = readadc(hw_map[i][0], SPICLK, SPIMOSI, SPIMISO, SPICS)
         # how much has it changed since the last read?
-        pot_adjust = abs(trim_pot - last_read)
+        pot_adjust = abs(trim_pot - last_read[i])
 
         if DEBUG:
-                print "trim_pot:", trim_pot
-                print "pot_adjust:", pot_adjust
-                print "last_read", last_read
+#                print "trim_pot:", trim_pot
+#                print "pot_adjust:", pot_adjust
+#                print "last_read", last_read
 
         if ( pot_adjust > tolerance ):
                trim_pot_changed = True
@@ -95,22 +98,17 @@ while True:
                 set_volume = round(set_volume)          # round out decimal value
                 set_volume = int(set_volume)            # cast volume as integer
 
-                print 'Volume = {volume}%' .format(volume = set_volume)
-                set_vol_cmd = 'sudo amixer cset numid=1 -- {volume}% > /dev/null' .format(volume = set_volume)
-#                os.system(set_vol_cmd)  # set volume
+#                print 'Volume = {volume}%' .format(volume = set_volume)
 
-                if DEBUG:
-                        print "set_volume", set_volume
-                        print "tri_pot_changed", set_volume
 
                 # save the potentiometer reading for the next loop
-                last_read = trim_pot
+                last_read[i] = trim_pot
                 message = "rPi analog state changed to: %d" % (trim_pot)
                 print message
                 if trim_pot < 100:
-                    p.pushNote(keys.pushbullet_device, 'Door opened.', 'Office');
+                    p.pushNote(keys.pushbullet_device, 'Door opened.', hw_map[i][1]);
                 else:
-                    p.pushNote(keys.pushbullet_device, 'Door closed', 'Office')
+                    p.pushNote(keys.pushbullet_device, 'Door closed', hw_map[i][1])
 
         # hang out and do nothing for a half second
         time.sleep(0.5)
