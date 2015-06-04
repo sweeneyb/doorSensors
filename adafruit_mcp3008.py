@@ -69,11 +69,11 @@ hw_map = [[0, "office door"],[2,"back hall door"]]
 last_read = [0, 0]
 
 #last_read = 0       # this keeps track of the last potentiometer value
-tolerance = 100       # to keep from being jittery we'll only change
+tolerance = 300       # to keep from being jittery we'll only change
                     # volume when the pot has moved more than 5 'counts'
 
 while True:
-   for i in range(len(last_read)):
+    for i in range(len(last_read)):
         # we'll assume that the pot didn't move
         trim_pot_changed = False
 
@@ -82,16 +82,11 @@ while True:
         # how much has it changed since the last read?
         pot_adjust = abs(trim_pot - last_read[i])
 
-        if DEBUG:
-#                print "trim_pot:", trim_pot
-#                print "pot_adjust:", pot_adjust
-#                print "last_read", last_read
-
         if ( pot_adjust > tolerance ):
                trim_pot_changed = True
 
-        if DEBUG:
-                print "trim_pot_changed", trim_pot_changed
+        #if DEBUG:
+        #        print "trim_pot_changed", trim_pot_changed
 
         if ( trim_pot_changed ):
                 set_volume = trim_pot / 10.24           # convert 10bit adc0 (0-1024) trim pot read into 0-100 volume level
@@ -111,4 +106,4 @@ while True:
                     p.pushNote(keys.pushbullet_device, 'Door closed', hw_map[i][1])
 
         # hang out and do nothing for a half second
-        time.sleep(0.5)
+        time.sleep(1.0)
