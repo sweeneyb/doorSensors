@@ -65,8 +65,8 @@ p = PushBullet(apiKey)
 
 # 10k trim pot connected to adc #0
 #potentiometer_adc = 2;
-hw_map = [[0, "office door"],[2,"back hall door"]]
-last_read = [0, 0]
+hw_map = [[0, "office door"],[2,"back hall door"], [1, "front door"]]
+last_read = [0, 0, 0]
 
 #last_read = 0       # this keeps track of the last potentiometer value
 tolerance = 300       # to keep from being jittery we'll only change
