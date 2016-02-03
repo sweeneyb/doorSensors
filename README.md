@@ -14,4 +14,4 @@ pushbullet_key=="XXX"
 pushbullet_device="YYY"
 ```
 
-See [https://docs.pushbullet.com/] for details of those values.  Right now, the registration ID is hardcoded to the value that's being logged to the eclipse console when I run the android client.  Eventually, I'll handle registrations automatically, but it's a TODO for now.
+See https://docs.pushbullet.com/ for details of those values.  Right now, the registration ID is hardcoded to the value that's being logged to the eclipse console when I run the android client.  Eventually, I'll handle registrations automatically, but it's a TODO for now.
